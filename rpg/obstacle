@@ -1,0 +1,47 @@
+import pygame
+
+imageBaby = pygame.image.load("images/babycrying.png")
+babySmall = pygame.transform.scale(imageBaby, (50,50))
+
+class platform(object):
+
+	def __init__(self, name, x, y, surface):
+
+		self.name = name
+		self.image = babySmall
+		self.surface = surface
+		self.x = x
+		self.y = y
+		self.dx = 0
+		self.dy = 0
+
+	def draw(self):
+		self.surface.blit(self.image.covert(), (self.x,self.y))
+
+	def moveX(self):
+		self.x += self.dx
+
+	def moveY(self):
+		self.y += self.dy
+		
+	def setX(self, x):
+		self.x = x
+		
+	def setY(self, y):
+		self.y = y
+		
+	def setdX(self, dx):
+		self.dx = dx
+		
+	def setdY(self, dy):
+		self.dy = dy
+		
+	def changeY(self, deltay):
+		self.dy += deltay
+	
+	def changeX(self, deltax):
+		self.dx += deltax
+		
+	def move(self):
+		self.moveX()
+		self.moveY()
