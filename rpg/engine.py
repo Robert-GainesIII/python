@@ -18,7 +18,7 @@ pygame.display.set_caption("Rpg")
 
 playingGame = True
 
-p1 = P("bobby", "spellsword", screen)
+p1 = P("bobby", "spellsword", screen, SCREEN_H)
 obstacles = []
 obstacles.append(plat("platform 1 is a baby", 200, 300, screen))
 
@@ -31,7 +31,7 @@ def redraw():
 
 	
 def checkCollisions(thing1, thing2):
-	if(abs(thing1.x - thing2.x) < 25 and abs(thing1.y - thing2.y < 25)):
+	if(abs(thing1.x -thing2.x) < thing1.width and thing1.y < thing2.y):
 		print("True")
 		return True
 	else:
@@ -46,25 +46,14 @@ def physics():
 		p1.dx += 2
 	else:
 		p1.setdX(0)
+		
 	for o in obstacles:
-		if checkCollisions(p1, o):
+		if checkCollisions(p1, o) and p1.dx > 0:
 			p1.setPlatform(o)
-			p1.setdY(0)
 			p1.setOnPlatform(True)
-			p1.isJumping = False
-			p1.doubleJump = False
 			break
-	if p1.getY() < SCREEN_H-p1.height and p1.onPlatform != True:
-		p1.changeY(10)
-	elif p1.getY() < SCREEN_H-p1.height and p1.onPlatform and p1.hasPlatform:
-		if checkCollisions(p1, p1.platform) == False:
-			p1.onPlatform = False
-			p1.hasPlatform = False
-	else:
-		p1.isJumping = False
-		p1.doubleJump = False
-		p1.setdY(0)
-		p1.setY(SCREEN_H-p1.height)
+			
+	p1.physics()
 	
 
 

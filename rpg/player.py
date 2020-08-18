@@ -4,7 +4,7 @@ image = pygame.image.load('images/rpgGuyS.png')
 
 class player(object):
 
-	def __init__(self, name, path, surface):
+	def __init__(self, name, path, surface, h):
 
 		self.name = name
 		self.path = path
@@ -13,7 +13,7 @@ class player(object):
 		self.x = 50
 		self.y = 50
 		self.width = 60
-		self.height = 60
+		self.height = 64
 		self.dx = 0
 		self.dy = 0
 		self.isJumping = False
@@ -21,6 +21,7 @@ class player(object):
 		self.timeSinceJump = 0
 		self.onPlatform = False
 		self.hasPlatform = False
+		self.myBottom = h
 		
 	def setPlatform(self, plat):
 		self.platform = plat
@@ -71,3 +72,17 @@ class player(object):
 			self.onPlatform = False
 		self.moveX()
 		self.moveY()
+		
+	def physics(self):
+		if self.y < self.myBottom-self.height and self.onPlatform != True:
+			self.changeY(10)
+		
+		#elif self.y < myBottom-self.height and self.onPlatform and self.hasPlatform:
+		#	if checkCollisions(self, self.platform) == False:
+		#		self.onPlatform = False
+		#		self.hasPlatform = False
+		else:
+			self.isJumping = False
+			self.doubleJump = False
+			self.setdY(0)
+			self.setY(self.myBottom-self.height)
