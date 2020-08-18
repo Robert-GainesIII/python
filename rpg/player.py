@@ -1,6 +1,6 @@
 import pygame
 
-image = pygame.image.load('images/rpgGuy.png')
+image = pygame.image.load('images/rpgGuyS.png')
 
 class player(object):
 
@@ -12,12 +12,19 @@ class player(object):
 		self.surface = surface
 		self.x = 50
 		self.y = 50
+		self.width = 60
+		self.height = 60
 		self.dx = 0
 		self.dy = 0
 		self.isJumping = False
 		self.doubleJump = False
 		self.timeSinceJump = 0
 		self.onPlatform = False
+		self.hasPlatform = False
+		
+	def setPlatform(self, plat):
+		self.platform = plat
+		self.hasPlatform = True
 	
 	def setOnPlatform(self, bool):
 		self.onPlatform = bool
@@ -27,6 +34,7 @@ class player(object):
 
 	def draw(self):
 		self.surface.blit(self.image, (self.x,self.y))
+		pygame.draw.rect(self.surface, (255,0,0), (self.x, self.y, self.width, self.height), 2)
 
 	def moveX(self):
 		self.x += self.dx

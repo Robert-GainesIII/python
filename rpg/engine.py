@@ -20,7 +20,7 @@ playingGame = True
 
 p1 = P("bobby", "spellsword", screen)
 obstacles = []
-obstacles.append(plat("platform 1 is a baby", 200, 500, screen))
+obstacles.append(plat("platform 1 is a baby", 200, 300, screen))
 
 def redraw():
 	screen.blit(background, (0,0))
@@ -32,6 +32,7 @@ def redraw():
 	
 def checkCollisions(thing1, thing2):
 	if(abs(thing1.x - thing2.x) < 25 and abs(thing1.y - thing2.y < 25)):
+		print("True")
 		return True
 	else:
 		return False
@@ -47,18 +48,25 @@ def physics():
 		p1.setdX(0)
 	for o in obstacles:
 		if checkCollisions(p1, o):
+			p1.setPlatform(o)
 			p1.setdY(0)
 			p1.setOnPlatform(True)
 			p1.isJumping = False
 			p1.doubleJump = False
-	if p1.getY() < 400 and p1.onPlatform != True:
-		p1.changeY(10) 
+			break
+	if p1.getY() < SCREEN_H-p1.height and p1.onPlatform != True:
+		p1.changeY(10)
+	elif p1.getY() < SCREEN_H-p1.height and p1.onPlatform and p1.hasPlatform:
+		if checkCollisions(p1, p1.platform) == False:
+			p1.onPlatform = False
+			p1.hasPlatform = False
 	else:
 		p1.isJumping = False
 		p1.doubleJump = False
 		p1.setdY(0)
-		p1.setY(400)
+		p1.setY(SCREEN_H-p1.height)
 	
+
 
 while playingGame:
 
@@ -72,9 +80,9 @@ while playingGame:
 	keys = pygame.key.get_pressed()
 
 	if keys[pygame.K_a]:
-		p1.changeX(-4)
+		p1.changeX(-2)
 	if keys[pygame.K_d]:
-		p1.changeX(4)
+		p1.changeX(2)
 	if keys[pygame.K_SPACE] and p1.isJumping != True:
 		p1.changeY(-60)
 		p1.setLastJump(pygame.time.get_ticks())
