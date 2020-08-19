@@ -4,7 +4,7 @@ image = pygame.image.load('images/rpgGuyS.png')
 
 class player(object):
 
-	def __init__(self, name, path, surface, h):
+	def __init__(self, name, path, surface, h, f, speed, jump):
 
 		self.name = name
 		self.path = path
@@ -21,11 +21,16 @@ class player(object):
 		self.timeSinceJump = 0
 		self.onPlatform = False
 		self.hasPlatform = False
+		self.screenH = h
 		self.myBottom = h
+		self.collisionFunction = f
+		self.speed = speed
+		self.jump = jump
 		
 	def setPlatform(self, plat):
 		self.platform = plat
 		self.hasPlatform = True
+		self.myBottom = self.platform.y
 	
 	def setOnPlatform(self, bool):
 		self.onPlatform = bool
@@ -68,21 +73,41 @@ class player(object):
 		self.dx += deltax
 		
 	def move(self):
-		if self.y >= 390:
-			self.onPlatform = False
 		self.moveX()
 		self.moveY()
 		
 	def physics(self):
-		if self.y < self.myBottom-self.height and self.onPlatform != True:
-			self.changeY(10)
 		
+
+		self.move()
+	
+		if self.hasPlatform:
+			if self.collisionFunction(self, self.platform) != True:
+				self.hasPlatform = False
+				self.onPlatform = False
+				self.myBottom = self.screenH
 		#elif self.y < myBottom-self.height and self.onPlatform and self.hasPlatform:
 		#	if checkCollisions(self, self.platform) == False:
 		#		self.onPlatform = False
-		#		self.hasPlatform = False
+		#		self.hasPlatform = Fals
+		
+		#VERTICAL MOVEMENT PHYSICS
+		if self.y < self.myBottom-self.height and self.onPlatform != True:
+			self.changeY(10)
+		elif self.y < self.myBottom-self.height and self.hasPlatform:
+			self.changeY(10)
 		else:
 			self.isJumping = False
 			self.doubleJump = False
 			self.setdY(0)
 			self.setY(self.myBottom-self.height)
+	
+		#MOVEMENT CODE FOR HORIZONTAL DIRECTION
+		if self.dx > 0:
+			self.dx -= self.speed
+		elif self.dx < 0:
+			self.dx += self.speed
+		else:
+			self.setdX(0)
+			
+		
